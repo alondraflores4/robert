@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Heebo:400,700|Oxygen:700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Heebo:400,700|Oxygen:700" rel="stylesheet">
+    <link rel="stylesheet" href="../dist/css/style.css">
+    <script src="https://unpkg.com/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <link rel="shortcut icon" href="../ico/sound.png" type="image/x-icon">
+    <title>Robert</title>
+</head>
+
+<body>
+    <?php require '../components/nav_login.php'; ?>
+
+    <style>
+        body {
+            background-color: #DBDADA;
+        }
+
+        #Container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+        }
+
+        #rays {
+            z-index: 2;
+            position: relative;
+            bottom: -1.5em;
+            animation: rays 2s ease-in-out infinite;
+        }
+
+        .form {
+            position: relative;
+            top: 5em;
+            padding: 4%;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.5rem;
+            border: 4px solid #fff;
+            background: rgba(0, 255, 240, 0.52);
+            box-shadow: 0px 0px 64px 0px #82e1ff inset, 0px 0px 16px #a8fffaa6;
+            backdrop-filter: blur(3.5px);
+            gap: 1em;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        #login-lable {
+            text-align: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 8px;
+            text-shadow: 0px 0px 16px rgb(243, 243, 243);
+        }
+
+        .form-content {
+            height: 3em;
+            padding: 1px 8px;
+            color: white;
+            text-decoration: none;
+            letter-spacing: 1px;
+            font-weight: bold;
+            border-radius: 6px;
+            border: 2px solid #fff;
+            background: rgba(139, 255, 247, 0.486);
+            box-shadow: 0px 0px 1px 3px #9ee5e3 inset, 0px 4px 4px 0px #181a6040;
+            text-shadow: 0px 1px 4px rgb(243, 243, 243);
+        }
+
+        .form-content:focus-visible {
+            outline: none;
+            text-decoration: none;
+            background: rgba(139, 189, 255, 0.59);
+            box-shadow: 0px 0px 1px 4px #9ee5e3;
+        }
+
+        .form-content:hover {
+            background: rgba(139, 189, 255, 0.59);
+        }
+
+        ::placeholder {
+            font-weight: 300;
+            color: white;
+            letter-spacing: 0.1rem;
+            text-shadow: 0px 1px 5px rgb(66, 66, 66);
+        }
+
+        .form button {
+            cursor: pointer;
+            height: 3.5rem;
+            padding: 0%;
+            color: white;
+            font-size: 1.5em;
+            letter-spacing: 0.3rem;
+            border: 2px solid white;
+            background: linear-gradient(144deg, #9c11ffce, #2000eeb6 50%, #15efffbb);
+        }
+
+        .form button:hover {
+            position: relative;
+            bottom: 4px;
+            background: linear-gradient(144deg, #9c11ff, #2000ee 50%, #15fff3);
+            box-shadow: 0px 0px 2px 2px #ffffff;
+        }
+
+        @keyframes float {
+            0% {
+                position: relative;
+            }
+
+            50% {
+                top: 50px;
+            }
+
+            100% {
+                position: relative;
+            }
+        }
+
+        @keyframes rays {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+    </style>
+    <div id="Container">
+        <form class="form" action="../frontend/client.html" method="post">
+            <div id="login-label"> <a href="registro.html">Registrar Usuario</a></div>
+            <input class="form-content" type="text" placeholder="Usuario" id="user" name="user" autocomplete="username">
+            <input class="form-content" type="password" placeholder="Pin" id="pin" name="pin" autocomplete="current-password">
+            <button type="button" id="voiceButton">Activar Voz</button>
+            <button type="submit">Iniciar sesión</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const voiceButton = document.getElementById("voiceButton");
+            const userField = document.getElementById("user");
+            const pinField = document.getElementById("pin");
+            const loginButton = document.querySelector('button[type="submit"]');
+
+            if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'es-ES';
+
+                voiceButton.addEventListener("click", () => {
+                    try {
+                        recognition.start();
+                        console.log("Reconocimiento de voz iniciado.");
+                    } catch (error) {
+                        console.error("Error al iniciar el reconocimiento de voz:", error);
+                    }
+                });
+
+                recognition.addEventListener("result", (e) => {
+                    try {
+                        const transcript = e.results[0][0].transcript;
+                        console.log("Texto reconocido:", transcript);
+
+                        const userIndex = transcript.toLowerCase().indexOf("usuario");
+                        const pinIndex = transcript.toLowerCase().indexOf("pin");
+
+                        if (userIndex !== -1) {
+                            userField.value = transcript.slice(userIndex + 7).trim();
+                            console.log("Usuario autocompletado:", userField.value);
+                        }
+                        if (pinIndex !== -1) {
+                            pinField.value = transcript.slice(pinIndex + 3).trim();
+                            console.log("Pin autocompletado:", pinField.value);
+                        }
+                    } catch (error) {
+                        console.error("Error al procesar el resultado del reconocimiento:", error);
+                    }
+                });
+
+                recognition.addEventListener("end", () => {
+                    console.log("Reconocimiento de voz detenido.");
+                });
+
+                recognition.addEventListener("error", (event) => {
+                    console.error("Error en el reconocimiento de voz:", event.error);
+                });
+            } else {
+
+                voiceButton.style.display = "none";
+                console.log("El navegador no es compatible con el reconocimiento de voz.");
+            }
+
+
+            loginButton.addEventListener("click", () => {
+                voiceButton.disabled = true;
+            });
+        });
+    </script>
+
+
+
+
+
+    <br><br><br><br><br>
+    <?php require '../components/footer.php'; ?>
+</body>
+
+</html>
